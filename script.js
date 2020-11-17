@@ -5,18 +5,18 @@ var user = {
     x: 100,
     y: 100,
     direction: { x: 3, y: 0, },
-    color: "#0000FF",
+    color: "#0100FF",
 }
 var comp = {
     x: 600,
     y: 600,
     direction: { x: -3, y: 0, },
-    color: "#FF0000",
+    color: "#FF0001",
 }
     ctx.fillStyle = "#000020"
     ctx.rect(0,0,700,700)
     ctx.fill()
-    ctx.strokeStyle = "#005500"
+    ctx.strokeStyle = "#015500"
     ctx.lineWidth = 2;
     ctx.lineJoin = 'round'
     ctx.beginPath();
@@ -49,11 +49,14 @@ function collision(x,y){
 }
 function compAI(){
     //trying to find way to get average color of all pixels in strip, using that to calc the probablitliyy that the comp will turn
-var pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, 1, -10).data[2]; 
+var pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, -10, 1).data; 
+// ctx.fillStyle = "#ffffff"
+//     ctx.rect(comp.x+comp.direction.x,comp.y+comp.direction.y,(9*comp.direction.x/3),1)
+//     ctx.stroke()
     var hex = (rgbToHex(pixel[3]))
-    console.log(pixel+" "+1)
+    console.log(pixel.includes(1))
 
-    console.log(hex+" "+2)
+    // console.log(hex+" "+2)
 }
 function move(){
     user.x += user.direction.x
