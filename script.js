@@ -126,6 +126,7 @@ function changeDirection(key){
             user.direction.y = Math.round(user.direction.y*100)/100
         }
     }
+    ////
     else if(key === "a"){
         if (user.direction.x !== -3) {
             user.direction.x = (user.direction.x - 0.3 > -3) ? user.direction.x - 0.3 : -3
