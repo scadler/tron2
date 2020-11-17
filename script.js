@@ -45,11 +45,15 @@ function collision(x,y){
     var pixel = ctx.getImageData(x, y, 1, 1).data; 
     var hex = "#" + ("000000" + rgbToHex(pixel[0], pixel[1], pixel[2])).slice(-6);
     if(hex !== "#000020"){
-       console.log("collision")
     }
 }
 function compAI(){
+    //trying to find way to get average color of all pixels in strip, using that to calc the probablitliyy that the comp will turn
+var pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, 1, -10).data[2]; 
+    var hex = (rgbToHex(pixel[3]))
+    console.log(pixel+" "+1)
 
+    console.log(hex+" "+2)
 }
 function move(){
     user.x += user.direction.x
@@ -62,6 +66,7 @@ function game(){
     draw(user.color,user.x,user.y,user.direction)
     collision(user.x+user.direction.x,user.y+user.direction.y)
     move()
+    compAI()
 }
 game()
 setInterval(game, 50)
@@ -83,7 +88,5 @@ function keyPressed(e) {
         user.direction.y = 3
 		}if (key == " ") {
 		e.preventDefault();
-		// resetGrid()
-		// resetGame()
 	}
 }
