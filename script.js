@@ -26,6 +26,9 @@ var comp = {
     ctx.lineTo(699, 1);
     ctx.lineTo(1, 1);
     ctx.stroke()
+    ctx.fillStyle = "#FF0001"
+    ctx.rect(300,300,555,500)
+    ctx.fill()
 function draw(color,x,y,d){
     ctx.strokeStyle = color
     ctx.lineWidth = 2;
@@ -49,14 +52,67 @@ function collision(x,y){
 }
 function compAI(){
     //trying to find way to get average color of all pixels in strip, using that to calc the probablitliyy that the comp will turn
-var pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, -10, 1).data; 
-// ctx.fillStyle = "#ffffff"
-//     ctx.rect(comp.x+comp.direction.x,comp.y+comp.direction.y,(9*comp.direction.x/3),1)
-//     ctx.stroke()
-    var hex = (rgbToHex(pixel[3]))
-    console.log(pixel.includes(1))
+    let w = (comp.direction.x === 0) ? 1 : 100*comp.direction.x/3
+    let h = (comp.direction.y === 0) ? 1 : 100*comp.direction.y/3
+  
+pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, w, h).data; 
+
+    if(pixel.includes(1) === true){
+          console.log(pixel.slice(0,11))
+        if(pixel.slice(0,11).includes(1) === true){
+                newCompDirection(20)
+                console.log("emergency")
+                // console.log(pixel.slice(0,11).includes(1))
+            }
+        
+        else{ 
+            var i = 0
+            while(pixel.slice(i*20,(i*20)+19).includes(1) === false && i < 100){
+            // console.log("weurchpw9uchrp")
+            i++
+            // console.log(pixel)
+            // console.log(pixel.slice(0,11))
+            
+            if(pixel.slice(i*20,(i*20)+19).includes(1) === true){
+                // console.log(pixel.slice(i*20,(i*20)+19).includes(1)+" "+i)
+                // console.log(Math.pow(i/20, 2))
+                if(Math.random()-(Math.pow(i/20, 3)/1) < 0){
+                    // console.log("turn"+" "+Math.pow(i/20, 3)+" "+i)
+                    newCompDirection(2)
+                }
+            }
+        }
+            // console.log(i/100)
+        }
+    }
 
     // console.log(hex+" "+2)
+}
+function newCompDirection(n){
+    var i = 0
+    while(i < n){
+    i++
+    posX = (Math.random()-0.5 > 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
+    posY = (posX !== 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
+    let posW = (posX === 0) ? 1 : posX/3
+    let posH = (posY === 0) ? 1 : posY/3
+    if(ctx.getImageData(comp.x+posX, comp.y+posY, posW, posH).data.includes(1)===false){
+        if(comp.direction.x !== posX || comp.direction.y !==posY){
+            comp.direction.x = posX
+            comp.direction.y = posY
+            newDirection = true
+            // console.log("success")
+            i = n
+        }
+        else{
+            if(i > 10){
+            console.log("failed")
+            comp.direction.x = 0
+            comp.direction.y = 0
+            }
+        }
+    }
+    }
 }
 function move(){
     user.x += user.direction.x
