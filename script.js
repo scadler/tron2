@@ -12,6 +12,12 @@ var comp = {
     y: 600,
     direction: { x: -3, y: 0, },
     color: "#FF0001",
+    dangerDirec : { 
+                    index: 0,
+                    x: ["-3", "0", "3", "0"],
+                    y: ["0", "-3", "0", "3"],
+                },
+    wallFound: false,
 }
     ctx.fillStyle = "#000020"
     ctx.rect(0,0,700,700)
@@ -55,64 +61,108 @@ function compAI(){
     let w = (comp.direction.x === 0) ? 1 : 100*comp.direction.x/3
     let h = (comp.direction.y === 0) ? 1 : 100*comp.direction.y/3
   
-pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, w, h).data; 
-
+    pixel = ctx.getImageData(comp.x+comp.direction.x, comp.y+comp.direction.y, w, h).data; 
+    pixel = (comp.direction.x > -1 && comp.direction.y > -1) ? pixel.reverse() : pixel;
+    // console.log(index)
+    // console.log(pixel.slice(0,11))
     if(pixel.includes(1) === true){
-          console.log(pixel.slice(0,11))
-        if(pixel.slice(0,11).includes(1) === true){
-                newCompDirection(20)
+        comp.wallFound = false
+        //   console.log(pixel.slice(0,11))
+        if(pixel.slice(pixel.length-12,pixel.length-1).includes(1) === true){
+                newCompDirection("emergency")
                 console.log("emergency")
                 // console.log(pixel.slice(0,11).includes(1))
             }
-        
         else{ 
             var i = 0
-            while(pixel.slice(i*20,(i*20)+19).includes(1) === false && i < 100){
-            // console.log("weurchpw9uchrp")
-            i++
+            while(comp.wallFound === false && i < 100){
+    
             // console.log(pixel)
             // console.log(pixel.slice(0,11))
             
-            if(pixel.slice(i*20,(i*20)+19).includes(1) === true){
+            if(pixel.slice(pixel.length-(i*20)-20,pixel.length-(i*20)-1).includes(1) === true){
+                console.log(pixel.slice(pixel.length-(i*20)-20,pixel.length-(i*20)-1).includes(1))
+                console.log(pixel.slice(pixel.length-(i*20)-20,pixel.length-(i*20)-1))
+                comp.wallFound = true
+                console.log(i+" "+0)
                 // console.log(pixel.slice(i*20,(i*20)+19).includes(1)+" "+i)
                 // console.log(Math.pow(i/20, 2))
-                if(Math.random()-(Math.pow(i/20, 3)/1) < 0){
+                // console.log(Math.random()-((i*i)/400)+" "+i)
+                if(Math.random()-(Math.pow((20-i)/20, 3)) < 0){
+                    // console.log("turns")
                     // console.log("turn"+" "+Math.pow(i/20, 3)+" "+i)
-                    newCompDirection(2)
+                    newCompDirection("")
                 }
             }
+            i++
+            console.log(i+" "+1)
         }
+        //      var i = 0
+        //     while(pixel.slice(i*20,(i*20)+19).includes(1) === false && i < 100){
+        //     console.log("weurchpw9uchrp")
+        //     i++
+        //     // console.log(pixel)
+        //     // console.log(pixel.slice(0,11))
+            
+        //     if(pixel.slice(i*20,(i*20)+19).includes(1) === true){
+        //         // console.log(pixel.slice(i*20,(i*20)+19).includes(1)+" "+i)
+        //         // console.log(Math.pow(i/20, 2))
+        //         if(Math.random()-(Math.pow(i/20, 3)/1) < 0){
+        //             // console.log("turn"+" "+Math.pow(i/20, 3)+" "+i)
+        //             newCompDirection("")
+        //         }
+        //     }
+        // }
             // console.log(i/100)
         }
     }
 
     // console.log(hex+" "+2)
 }
-function newCompDirection(n){
+function newCompDirection(status){
     var i = 0
-    while(i < n){
-    i++
-    posX = (Math.random()-0.5 > 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
-    posY = (posX !== 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
-    let posW = (posX === 0) ? 1 : posX/3
-    let posH = (posY === 0) ? 1 : posY/3
-    if(ctx.getImageData(comp.x+posX, comp.y+posY, posW, posH).data.includes(1)===false){
-        if(comp.direction.x !== posX || comp.direction.y !==posY){
-            comp.direction.x = posX
-            comp.direction.y = posY
-            newDirection = true
-            // console.log("success")
-            i = n
-        }
-        else{
-            if(i > 10){
-            console.log("failed")
-            comp.direction.x = 0
-            comp.direction.y = 0
+    // if(status === "emergency"){
+    //     comp.dangerDirec.index = Math.floor(Math.random()*4)
+    //     while(i < 1){
+    //         index = (comp.dangerDirec.index + 1) % 4
+    //         posX = parseInt(comp.dangerDirec.x[index])
+    //         posY = parseInt(comp.dangerDirec.y[index])
+    //         console.log(posX+" "+posY)
+    //         let posW = (posX === 0) ? 1 : posX/3
+    //         let posH = (posY === 0) ? 1 : posY/3
+    //         console.log(ctx.getImageData(comp.x+posX, comp.y+posY, posW, posH).data)
+    //         if(ctx.getImageData(comp.x + posX, comp.y + posY, posW, posH).data.includes(1)===false){
+    //             i++
+    //             comp.direction.x = posX
+    //             comp.direction.y = posY
+    //         }
+    //     }
+    // }
+    // else{
+        while(i < 3){
+            i++
+            posX = (Math.random()-0.5 > 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
+            posY = (posX !== 0) ? 0 : (Math.random()-0.5 < 0) ? -3 : 3
+            let posW = (posX === 0) ? 1 : posX/3
+            let posH = (posY === 0) ? 1 : posY/3
+            if(ctx.getImageData(comp.x+posX, comp.y+posY, posW, posH).data.includes(1)===false){
+
+                if(comp.direction.x !== posX || comp.direction.y !==posY){
+                    comp.direction.x = posX
+                    comp.direction.y = posY
+                    // console.log("success")
+                    i = 3
+                }
+                // else{
+                //     if(i > 10){
+                //         // console.log("failed")
+                //         comp.direction.x = 0
+                //         comp.direction.y = 0
+                //     }
+                }
             }
-        }
-    }
-    }
+        // }
+    // }
 }
 function move(){
     user.x += user.direction.x
